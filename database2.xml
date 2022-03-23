@@ -1,14 +1,8 @@
 <?xml version="1.0" ?>
 <group>
     <topic name="topic1">
-        <note>
-            <content>This is a note</content>
-            <timestamp>23.3.2022</timestamp>
-        </note>
-        <note>
-            <content>This is another note</content>
-            <timestamp>23.3.2022</timestamp>
-        </note>
+        <note content=This is a note timestamp="55325235225" />
+        <note content=This is also a note timestamp="6215215225" />
     </topic>
     <topic name="topic2">
         <note>

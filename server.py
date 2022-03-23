@@ -7,19 +7,32 @@ IP = ("localhost", 3000)
 FILENAME = "database.xml"
 server = SimpleXMLRPCServer(IP, allow_none=True)
 
-root = etree.Element("root")
+root = etree.parse(FILENAME)
 
 class function_class:
 
-    def add_note(self, topic, text):
-        topic = root.xpath(f"//topic[@name='{topic}']")
+    def add_note(self, topic_name, text):
+        file = open(FILENAME, 'w')
+        topic = root.xpath(f"//topic[@name='{topic_name}']")
+
+        if (len(topic) == 0):
+            topic = etree.SubElement(root, topic_name)
+            
+        etree.SubElement(topic[0], "note", attrib={
+            "content": text,
+            "timestamp": str(time.time())})
+        
+        root.write(FILENAME, pretty_print=True)
+
+
+        '''
         base = etree.Element("group")
 
         etree.SubElement(topic[0], "note", attrib={
             "content": text,
             "timestamp": str(time.time())})
 
-        etree.ElementTree(root).write(FILENAME, pretty_print=True)
+        etree.ElementTree(root).write(FILENAME, pretty_print=True) '''
     '''     note = etree.Element("note")
         content = note.Element("content")
         content.text = text
@@ -33,15 +46,19 @@ class function_class:
             topic.append(note)
             print(topic) '''
 
-    def print_topics(self, topic):
-        notes = root.xpath(f"//topic[@name='{topic}']/note")
+    def print_topics(self, topic_name):
+        notes = root.xpath(f"//topic[@name='{topic_name}']/note")
 
         ret = []
         for note in notes:
-            content = note.xpath("content")[0]
-            timestamp = note.xpath("timestamp")[0]
-            ret.append([timestamp.text, content.text])
+            attributes = note.attrib
+            print(attributes)
+            
+            content = attributes["content"]
+            timestamp = attributes["timestamp"]
+            ret.append([timestamp, content])
 
+        print(ret)
         return ret
 
 #### Register functions

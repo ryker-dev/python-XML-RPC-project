@@ -4,18 +4,35 @@ ADDRESS = "http://localhost:3000"
 
 proxy = ServerProxy(ADDRESS)
 
-def print_notes(topic):
+def print_notes():
+    topic = input("Topic: ")
     notes = proxy.print_topics(topic)
 
-    print(f"-- {topic} --")
-    for note in notes:
-        print(f"{note[0]}: {note[1]}")
+    if (len(notes) > 0):
+        print(f"\n-- {topic} --")
+        for note in notes:
+            print(f"{note[0]}: {note[1]}")
+    print("\n")
         
-def add_note(topic, content):
+def add_note():
+    topic = input("Topic: ")
+    content = input("Content: ")
+
     proxy.add_note(topic, content)
     pass
 
 if __name__ == '__main__':
-    add_note("topic1", "Test test test")
-    ##print_notes("topic1")
+    while True:
+        print("1) Add note")
+        print("2) Print notes")
+        print("0) Exit")
+
+        action = input("Action: ")
+
+        if (action == "0"):
+            exit(0)
+        elif (action == "1"):
+            add_note()
+        elif (action == "2"):
+            print_notes()
     
