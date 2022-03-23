@@ -1,40 +1,48 @@
 from xmlrpc.server import SimpleXMLRPCServer
 import xml.dom.minidom
+from lxml import etree
+import time
 
 IP = ("localhost", 3000)
 FILENAME = "database.xml"
 server = SimpleXMLRPCServer(IP, allow_none=True)
 
-domtree = xml.dom.minidom.parse(FILENAME)
-group = domtree.documentElement
+root = etree.Element("root")
 
 class function_class:
 
-    def add_note(self, topic, text, timestamp):
-        topics = group.getElementsByTagName("topic")
+    def add_note(self, topic, text):
+        topic = root.xpath(f"//topic[@name='{topic}']")
+        base = etree.Element("group")
 
-        exists = False
-        for topic in topics:
-            if (topic.getAttribute('name') == topic):
-                exists = True
-                break
-        
-        if (exists):
-            pass
+        etree.SubElement(topic[0], "note", attrib={
+            "content": text,
+            "timestamp": str(time.time())})
 
-    def print_topics(self):
-        notes = group.getElementsByTagName("topic1")
+        etree.ElementTree(root).write(FILENAME, pretty_print=True)
+    '''     note = etree.Element("note")
+        content = note.Element("content")
+        content.text = text
+        timestamp = note.Element("timestamp")
+        timestamp.text = time.time()
 
-        print(notes)
+        note.append(content)
+        note.append(timestamp) '''
+
+    '''     if (len(topic) > 0):
+            topic.append(note)
+            print(topic) '''
+
+    def print_topics(self, topic):
+        notes = root.xpath(f"//topic[@name='{topic}']/note")
+
         ret = []
         for note in notes:
-            print(note)
-            topic_name = note.getAttribute('name')
-            text = group.getElementsByTagName("text")[0].childNodes[0].childNodes[0].nodeValue
-            timestamp = group.getElementsByTagName("timestamp")[0].childNodes[0].childNodes[0].nodeValue
-            ret.append([topic_name, text, timestamp])
+            content = note.xpath("content")[0]
+            timestamp = note.xpath("timestamp")[0]
+            ret.append([timestamp.text, content.text])
 
-            return ret
+        return ret
 
 #### Register functions
 server.register_instance(function_class())

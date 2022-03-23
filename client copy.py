@@ -16,6 +16,6 @@ def add_note(topic, content):
     pass
 
 if __name__ == '__main__':
-    add_note("topic1", "Test test test")
-    ##print_notes("topic1")
+    ##add_note("topic1", "Test test test")
+    print_notes("topic1")
     
