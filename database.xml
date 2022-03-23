@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<group>
+    <topic name="topic1">
+        <note>
+            <text>This is a topic</text>
+            <timestamp>23.3.2022</timestamp>
+        </note>
+    </topic>
+</group>
